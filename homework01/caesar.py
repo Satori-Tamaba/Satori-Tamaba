@@ -14,26 +14,7 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     >>> encrypt_caesar("")
     ''
     """
-    ciphertext = ""
-    # PUT YOUR CODE HERE
-    return ciphertext
-
-
-def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
-    """
-    Decrypts a ciphertext using a Caesar cipher.
-
-    >>> decrypt_caesar("SBWKRQ")
-    'PYTHON'
-    >>> decrypt_caesar("sbwkrq")
-    'python'
-    >>> decrypt_caesar("Sbwkrq3.6")
-    'Python3.6'
-    >>> decrypt_caesar("")
-    ''
-    """
-    plaintext = ""
-     shifr = ''
+    shifr = ''
     cifr = '1234567890 .,/;[]!"№;%:?*()_+'
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     alphabet_big = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -56,15 +37,23 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
                 shifr += leter
 
     return shifr
-    return plaintext
 
 
-def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
+def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     """
-    Brute force breaking a Caesar cipher.
+    Decrypts a ciphertext using a Caesar cipher.
+
+    >>> decrypt_caesar("SBWKRQ")
+    'PYTHON'
+    >>> decrypt_caesar("sbwkrq")
+    'python'
+    >>> decrypt_caesar("Sbwkrq3.6")
+    'Python3.6'
+    >>> decrypt_caesar("")
+    ''
     """
-    best_shift = 0
-     shifr = ''
+    
+    shifr = ''
     cifr = '1234567890 .,/;[]!"№;%:?*()_+'
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     alphabet_big = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -72,14 +61,14 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     index_leter_big = dict(zip(range(len(alphabet_big)), alphabet_big))
     leter_index = dict(zip(alphabet, range(len(alphabet))))
     index_leter = dict(zip(range(len(alphabet)), alphabet))
-    for leter in ciphertext:
+    for leter in plaintext:
         if (leter.isalpha()):
             if (leter.isupper()):
-                index_big = (leter_index_big[leter] - shift) % 26
+                index_big = (leter_index_big[leter] + shift) % 26
                 shifered_leter_big = index_leter_big[index_big]
                 shifr += shifered_leter_big
             else:
-                index = (leter_index[leter] - shift) % 26
+                index = (leter_index[leter] + shift) % 26
                 shifered_leter = index_leter[index]
                 shifr += shifered_leter
         else:
@@ -87,4 +76,10 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
                 shifr += leter
 
     return shifr
-    return best_shift
+    
+
+
+def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
+    """
+    Brute force breaking a Caesar cipher.
+    """
