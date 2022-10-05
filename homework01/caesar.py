@@ -11,9 +11,6 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     >>> encrypt_caesar("")
     ''
     """
-
-
-
     shifr = ''
     for let in plaintext:
         if (let.isupper()):
@@ -25,7 +22,6 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
         else:
             shifr += let
     return shifr
-
 
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
@@ -42,7 +38,7 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    shifr = ''
+  shifr = ''
     for let in ciphertext:
         if (let.isupper()):
             new_let = chr(((ord(let) - 65 - shift) % 26) + 65)
@@ -53,3 +49,12 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
         else:
             shifr += let
     return shifr
+
+def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
+    """
+    Brute force breaking a Caesar cipher.
+    """
+    best_shift = 0
+    # PUT YOUR CODE HERE
+    return best_shift
+    
