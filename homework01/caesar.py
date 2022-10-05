@@ -1,6 +1,3 @@
-import typing as tp
-
-
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
     Encrypts plaintext using a Caesar cipher.
@@ -14,6 +11,7 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     >>> encrypt_caesar("")
     ''
     """
+
     shifr = ''
     cifr = '1234567890 .,/;[]!"№;%:?*()_+'
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
@@ -52,7 +50,6 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    
     shifr = ''
     cifr = '1234567890 .,/;[]!"№;%:?*()_+'
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
@@ -61,14 +58,14 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     index_leter_big = dict(zip(range(len(alphabet_big)), alphabet_big))
     leter_index = dict(zip(alphabet, range(len(alphabet))))
     index_leter = dict(zip(range(len(alphabet)), alphabet))
-    for leter in plaintext:
+    for leter in ciphertext:
         if (leter.isalpha()):
             if (leter.isupper()):
-                index_big = (leter_index_big[leter] + shift) % 26
+                index_big = (leter_index_big[leter] - shift) % 26
                 shifered_leter_big = index_leter_big[index_big]
                 shifr += shifered_leter_big
             else:
-                index = (leter_index[leter] + shift) % 26
+                index = (leter_index[leter] - shift) % 26
                 shifered_leter = index_leter[index]
                 shifr += shifered_leter
         else:
@@ -76,10 +73,3 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
                 shifr += leter
 
     return shifr
-    
-
-
-def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
-    """
-    Brute force breaking a Caesar cipher.
-    """
