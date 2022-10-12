@@ -12,17 +12,17 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
 
-    shifr = ""
+    shier = ""
     for let in plaintext:
         if let.isupper():
             new_let = chr(((ord(let) - 65 + shift) % 26) + 65)
-            shifr += new_let
+            shier += new_let
         elif let.islower():
             new_let = chr(((ord(let) - 97 + shift) % 26) + 97)
-            shifr += new_let
+            shier += new_let
         else:
-            shifr += let
-    return shifr
+            shier += let
+    return shier
 
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
@@ -39,14 +39,14 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    shifr = ""
+    shier = ""
     for let in ciphertext:
         if let.isupper():
             new_let = chr(((ord(let) - 65 - shift) % 26) + 65)
-            shifr += new_let
+            shier += new_let
         elif let.islower():
             new_let = chr(((ord(let) - 97 - shift) % 26) + 97)
-            shifr += new_let
+            shier += new_let
         else:
-            shifr += let
-    return shifr
+            shier += let
+    return shier
