@@ -10,14 +10,15 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     'LXFOPVEFRNHR'
     """
     keyword *= len(plaintext) // len(keyword) + 1
-    shifr = ""
+    shier = ""
     for i, j in enumerate(plaintext):
         if keyword[i] == "a" or keyword[i] == "A":
-            shifr += j
+            shier += j
         else:
             pooch_bukakke = ord(j) + ord(keyword[i])
-            shifr += chr(pooch_bukakke % 26 + 65)
-    return shifr
+            shier += chr(pooch_bukakke % 26 + 65)
+
+    return shier
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
@@ -32,11 +33,11 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     'ATTACKATDAWN'
     """
     keyword *= len(ciphertext) // len(keyword) + 1
-    shif = ""
+    shift = ""
     for i, j in enumerate(ciphertext):
-        if keyword[i] == 'a' or keyword[i] == 'A':
-            shif += j
+        if keyword[i] == "a" or keyword[i] == "A":
+            shift += j
         else:
             pooch_bukakke = ord(j) - ord(keyword[i])
-            shif += chr(pooch_bukakke % 26 + 65)
-    return shif
+            shift += chr(pooch_bukakke % 26 + 65)
+    return shift

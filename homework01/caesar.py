@@ -22,11 +22,11 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
             shier += new_let
         else:
             shier += let
+
     return shier
 
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
-
     """
     Decrypts a ciphertext using a Caesar cipher.
 
@@ -49,4 +49,5 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
             shier += new_let
         else:
             shier += let
+
     return shier
