@@ -9,20 +9,14 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
     """
-    keyword *= len(plaintext) // len(keyword) + 1
     shier = ""
-    for i, j in enumerate(plaintext):
-        if keyword[i] == "a" or keyword[i] == "A":
-            shier += j
+    for i in range(len(plaintext)):
+        if plaintext[i].isupper():
+            shier += chr((ord(plaintext[i]) - 2 * 65 + ord(keyword[i % len(keyword)])) % 26 + 65)
+        elif plaintext[i].islower():
+            shier += chr((ord(plaintext[i]) - 2 * 97 + ord(keyword[i % len(keyword)])) % 26 + 97)
         else:
-            if j.isupper():
-                pooch_bukakke = ord(j) + ord(keyword[i])
-                shier += chr(pooch_bukakke % 26 + 65)
-            elif j.islower():
-                pooch_bukakke = ord(j) + ord(keyword[i])
-                shier += chr(pooch_bukakke % 26 + 97)
-            else:
-                shier += j
+            shier += plaintext[i]
     return shier
 
 
@@ -37,18 +31,12 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
     """
-    keyword *= len(ciphertext) // len(keyword) + 1
     shier = ""
-    for i, j in enumerate(ciphertext):
-        if keyword[i] == "a" or keyword[i] == "A":
-            shier += j
+    for i in range(len(ciphertext)):
+        if ciphertext[i].isupper():
+            shier += chr((ord(ciphertext[i]) - ord(keyword[i % len(keyword)])) % 26 + 65)
+        elif ciphertext[i].islower():
+            shier += chr((ord(ciphertext[i]) - ord(keyword[i % len(keyword)])) % 26 + 97)
         else:
-            if j.isupper():
-                pooch_bukakke = ord(j) - ord(keyword[i])
-                shier += chr(pooch_bukakke % 26 + 65)
-            elif j.islower():
-                pooch_bukakke = ord(j) - ord(keyword[i])
-                shier += chr(pooch_bukakke % 26 + 97)
-            else:
-                shier += j
+            shier += ciphertext[i]
     return shier
