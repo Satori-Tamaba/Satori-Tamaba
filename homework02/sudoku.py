@@ -59,7 +59,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     """
     for i in range(len(grid)):
         if i == pos[0]:
-            return grid[i]
+            return list(grid[i])
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
