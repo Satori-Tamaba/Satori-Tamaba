@@ -100,4 +100,4 @@ class GameOfLife:
         """
         with open(filename, "w") as f:
             for i in self.curr_generation:
-                print(i, sep="", file=f)у
+                print(i, sep="", file=f)
