@@ -1,11 +1,1 @@
-responses==
-requests==
-httpretty==
-tqdm==
-networkx==
-pandas==
-matplotlib==
-python-louvain==
-gensim==
-textacy==
-pyLDAvis==
+
