@@ -1,26 +1,11 @@
 import typing as tp
 
-import requests
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+import requests  # type: ignore
+from requests.adapters import HTTPAdapter  # type: ignore
+from requests.packages.urllib3.util.retry import Retry  # type: ignore
 
 
-class TimeoutHTTPAdapter(HTTPAdapter):
-    def __init__(self, timeout, *args, **kwargs):
-        self.timeout = timeout
-        if "timeout" in kwargs:
-            self.timeout = kwargs["timeout"]
-            del kwargs["timeout"]
-        super().__init__(*args, **kwargs)
-
-    def send(self, request, **kwargs):
-        timeout = kwargs.get("timeout")
-        if timeout is None:
-            kwargs["timeout"] = self.timeout
-        return super().send(request, **kwargs)
-
-
-class Session(requests.Session):
+class Session:
     """
     Сессия.
     :param base_url: Базовый адрес, на который будут выполняться запросы.
@@ -36,21 +21,23 @@ class Session(requests.Session):
         max_retries: int = 3,
         backoff_factor: float = 0.3,
     ) -> None:
-        super().__init__()
+
         self.base_url = base_url
-
-        retry = Retry(
-            total=max_retries,
-            status_forcelist=[500, 503],
-            backoff_factor=backoff_factor,
+        self.timeout = timeout
+        self.session = requests.Session()
+        adapter = HTTPAdapter(
+            max_retries=Retry(
+                total=max_retries,
+                backoff_factor=backoff_factor,
+                status_forcelist=[500, 502, 503, 504],
+            )
         )
+        self.session.mount("https://", adapter)
 
-        adapter = TimeoutHTTPAdapter(timeout=timeout, max_retries=retry)
-        super().mount(self.base_url, adapter)
+    def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
+        response = self.session.get(f"{self.base_url}/{url}", params=kwargs, timeout=self.timeout)
+        return response
 
-    def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type: ignore
-        return super().get(self.base_url + "/" + url, *args, **kwargs)
-
-    def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:  # type: ignore
-        return super().post(self.base_url + "/" + url, *args, **kwargs)
-        
+    def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
+        response = self.session.post(f"{self.base_url}/{url}", data=kwargs, timeout=self.timeout)
+        return response

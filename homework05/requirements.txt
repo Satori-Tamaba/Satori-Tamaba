@@ -9,4 +9,3 @@ python-louvain
 gensim
 textacy
 pyLDAvis
-types-requests

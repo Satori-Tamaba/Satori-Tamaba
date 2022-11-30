@@ -2,11 +2,9 @@ import textwrap
 import time
 import typing as tp
 from string import Template
-import math
 
 import pandas as pd
 from pandas import json_normalize
-
 from vkapi import config, session
 from vkapi.exceptions import APIError
 
@@ -17,50 +15,11 @@ def get_posts_2500(
     offset: int = 0,
     count: int = 10,
     max_count: int = 2500,
-    filter: str = "owner",
+    fltr: str = "owner",
     extended: int = 0,
     fields: tp.Optional[tp.List[str]] = None,
 ) -> tp.Dict[str, tp.Any]:
-    # fmt: off
-    script = f"""
-    var i = 0; 
-    var result = [];
-    while (i < {max_count}){{
-        if ({offset}+i+100 > {count}){{
-            result.push(API.wall.get({{
-            "owner_id": "{owner_id}",
-            "domain": "{domain}",
-            "offset": "{offset} +i",
-            "count": "{count}-(i+{offset})",
-            "filter": "{filter}",
-            "extended": "{extended}",
-            "fields": "{fields}"
-        }}));
-    }} 
-    result.push(API.wall.get({{
-            "owner_id": "{owner_id}",
-            "domain": "{domain}",
-            "offset": "{offset} +i",
-            "count": "{count}",
-            "filter": "{filter}",
-            "extended": "{extended}",
-            "fields": "{fields}"
-        }}));
-        i = i + {max_count};
-    }}
-    return result;
-    """
-    # fmt: on
-    data = {
-        "code": script,
-        "access_token": config.VK_CONFIG["access_token"],
-        "v": config.VK_CONFIG["version"],
-    }
-    response = session.post("execute", data=data)
-    doc = response.json()
-    if "error" in doc or not response.ok:
-        raise APIError(doc["error"]["error_msg"])
-    return doc["response"]["items"]
+    return {}
 
 
 def get_wall_execute(
@@ -69,7 +28,7 @@ def get_wall_execute(
     offset: int = 0,
     count: int = 10,
     max_count: int = 2500,
-    filter: str = "owner",
+    fltr: str = "owner",
     extended: int = 0,
     fields: tp.Optional[tp.List[str]] = None,
     progress=None,
@@ -84,20 +43,45 @@ def get_wall_execute(
     :param offset: Смещение, необходимое для выборки определенного подмножества записей.
     :param count: Количество записей, которое необходимо получить (0 - все записи).
     :param max_count: Максимальное число записей, которое может быть получено за один запрос.
-    :param filter: Определяет, какие типы записей на стене необходимо получить.
+    :param fltr: Определяет, какие типы записей на стене необходимо получить.
     :param extended: 1 — в ответе будут возвращены дополнительные поля profiles и groups, содержащие информацию о пользователях и сообществах.
     :param fields: Список дополнительных полей для профилей и сообществ, которые необходимо вернуть.
     :param progress: Callback для отображения прогресса.
     """
-    finish = pd.DataFrame()
-    if progress is None:
-        progress = lambda x: x
+    code = f"""if ({count} < 100) {{
+                answer = API.wall.get({{
+                    owner_id:{owner_id},
+                    domain:{domain},
+                    offset:{offset},
+                    "count":"{count}",
+                    filter:{fltr},
+                    extended:{extended},
+                    fields: {fields}
+                }});
+            }} else {{
+                answer = [];
+                for(var i = 0; i < Math.floor({count} / 100); i ++) {{
+                    post = API.wall.get({{
+                        owner_id:{owner_id},
+                        domain:{domain},
+                        offset:{offset} + i * 100,
+                        count: 100,
+                        filter:{fltr},
+                        extended:{extended},
+                        fields: {fields}
+                    }});
+                    
+                    posts.push(...post);
+                }}
+            }}
+            return answer;"""
 
-    for _ in progress(range(math.ceil(count / 2500))):
-        finish = finish.append(
-            json_normalize(
-                get_posts_2500(owner_id, domain, offset, count, max_count, filter, extended, fields)
-            )
-        )
-        time.sleep(1)
-    return finish
+    time.sleep(2)
+    return json_normalize(
+        session.post(
+            "execute",
+            code=code,
+            access_token=config.VK_CONFIG["access_token"],
+            v=config.VK_CONFIG["version"],
+        ).json()["response"]["items"]
+    )
